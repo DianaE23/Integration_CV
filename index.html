@@ -14,7 +14,8 @@
 		<!-- Import maps polyfill -->
 		<!-- Remove this when import maps will be widely supported -->
 		<script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
-        
+        <script src="https://unpkg.com/three@0.126.0/examples/js/loaders/GLTFLoader.js"></script>
+        <script src="https://unpkg.com/three@0.126.0/examples/js/loaders/RGBELoader.js"></script>
         <script type="importmap">
             {
               "imports": {
@@ -25,12 +26,18 @@
           </script>
 
 
-
-
 		<script type="module">
 
 			import * as THREE from 'three';
 			import { ARButton } from '/scripts/ARButton.js';
+			import { App } from '/scripts/app.js';
+			import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+			import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+
+			document.addEventListener("DOMContentLoaded", function(){
+			const app = new App();
+			window.app = app;
+		});
 
 			let camera, scene, renderer;
 			let controller;
@@ -40,6 +47,7 @@
 
 			function init() {
 
+				//Initialisation de Scene 3D et Lumiere
 				const container = document.createElement( 'div' );
 				document.body.appendChild( container );
 
@@ -47,25 +55,40 @@
 
 				camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 0.01, 20 );
 
-				const light = new THREE.HemisphereLight( 0xffffff, 0xbbbbff, 1 );
-				light.position.set( 0.5, 1, 0.25 );
-				scene.add( light );
+				const ambient = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
+        		ambient.position.set( 0.5, 1, 0.25 );
+				scene.add(ambient);
 
-				//
+				//Initialisation de Rendu AR
 
 				renderer = new THREE.WebGLRenderer( { antialias: true, alpha: true } );
 				renderer.setPixelRatio( window.devicePixelRatio );
 				renderer.setSize( window.innerWidth, window.innerHeight );
+				renderer.outputEncoding = THREE.sRGBEncoding;
 				renderer.xr.enabled = true;
 				container.appendChild( renderer.domElement );
 
-				//
+				//Création du disque de spawn d'objet 3D
+				reticle = new THREE.Mesh(
+            	new THREE.RingBufferGeometry( 0.15, 0.2, 32 ).rotateX( - Math.PI / 2 ),
+           		new THREE.MeshBasicMaterial()
+       			);
+        
+        		reticle.matrixAutoUpdate = false;
+        		reticle.visible = false;
+        		scene.add(reticle);
+				
+
+				//Création d'un bouton 
 
 				document.body.appendChild( ARButton.createButton( renderer ) );
-
-				//
+				setupXR();
+				//Ajout de geometry 3D
 
 				const geometry = new THREE.CylinderGeometry( 0, 0.05, 0.2, 32 ).rotateX( Math.PI / 2 );
+				
+				
+				// Feature de tapotement ecran => Objet 3D
 
 				function onSelect() {
 
@@ -87,6 +110,118 @@
 
 			}
 
+
+			function setupXR(){
+        		renderer.xr.enabled = true;
+        
+				if ( 'xr' in navigator ) {
+
+					navigator.xr.isSessionSupported( 'immersive-ar' ).then( ( supported ) => {
+
+						if (supported){
+							const collection = document.getElementsByClassName("ar-button");
+							[...collection].forEach( el => {
+								el.style.display = 'block';
+							});
+						}
+					} );
+            
+				} 
+        
+				const self = this;
+
+				hitTestSourceRequested = false;
+				hitTestSource = null;
+				
+				function onSelect() {
+					if (self.asset===undefined) return;
+					
+					if (self.reticle.visible){
+						self.asset.position.setFromMatrixPosition( self.reticle.matrix );
+						self.asset.visible = true;
+					}
+				}
+
+				controller = renderer.xr.getController( 0 );
+				controller.addEventListener( 'select', onSelect );
+				
+				scene.add( controller );
+    		}
+       
+			function showAsset(id){
+        		initAR();
+        		assetsPath = './assets';
+				const loader = new GLTFLoader( ).setPath(assetsPath);
+        		const self = this;
+        
+				// Load a glTF resource
+				loader.load(
+					// resource URL
+					`asset${id}.glb`,
+					// called when the resource is loaded
+					function ( gltf ) {
+
+						self.scene.add( gltf.scene );
+						self.asset = gltf.scene;
+				
+						self.asset.visible = false; 
+						
+						self.renderer.setAnimationLoop( self.render.bind(self) );
+					},
+
+					// called when loading has errors
+					function ( error ) {
+
+						console.log( 'An error happened' );
+
+					}
+				);
+			}			
+    
+    		function initAR(){
+				let currentSession = null;
+				const self = this;
+			
+				const sessionInit = { requiredFeatures: [ 'hit-test' ] };
+			
+        
+        		function onSessionStarted( session ) {
+
+					session.addEventListener( 'end', onSessionEnded );
+
+					self.renderer.xr.setReferenceSpaceType( 'local' );
+					self.renderer.xr.setSession( session );
+			
+					currentSession = session;
+					
+        		}
+
+        		function onSessionEnded( ) {
+
+					currentSession.removeEventListener( 'end', onSessionEnded );
+
+					currentSession = null;
+					
+					if (self.asset !== null){
+						self.scene.remove( self.coffee );
+						self.asset = null;
+					}
+					
+					self.renderer.setAnimationLoop( null );
+
+				}
+
+				if ( currentSession === null ) {
+
+					navigator.xr.requestSession( 'immersive-ar', sessionInit ).then( onSessionStarted );
+
+				} else {
+
+					currentSession.end();
+
+				}
+			}
+
 			function onWindowResize() {
 
 				camera.aspect = window.innerWidth / window.innerHeight;
@@ -96,16 +231,64 @@
 
 			}
 
-			//
-
 			function animate() {
 
 				renderer.setAnimationLoop( render );
 
 			}
 
-			function render() {
+			function requestHitTestSource(){
+        		const self = this;
+        
+        		const session = renderer.xr.getSession();
 
+        		session.requestReferenceSpace( 'viewer' ).then( function ( referenceSpace ) {
+            
+           			session.requestHitTestSource( { space: referenceSpace } ).then( function ( source ) {
+
+                		self.hitTestSource = source;
+
+            		} );
+
+        		} );
+
+        		session.addEventListener( 'end', function () {
+
+           			self.hitTestSourceRequested = false;
+            		self.hitTestSource = null;
+            		self.referenceSpace = null;
+
+        		} );
+
+        		hitTestSourceRequested = true;
+
+    		}	
+			
+			function getHitTestResults( frame ){
+       			const hitTestResults = frame.getHitTestResults( hitTestSource );
+
+        		if ( hitTestResults.length ) {
+            
+            		const referenceSpace = renderer.xr.getReferenceSpace();
+            		const hit = hitTestResults[ 0 ];
+            		const pose = hit.getPose( referenceSpace );
+
+           		 	reticle.visible = true;
+            		reticle.matrix.fromArray( pose.transform.matrix );
+
+        		} else {
+
+            		reticle.visible = false;
+				}
+
+    		}
+
+			function render(timestamp, frame) {
+				if ( frame ) {
+            		if (hitTestSourceRequested === false ) requestHitTestSource( )
+
+            		if (hitTestSource ) getHitTestResults( frame );
+        		}
 				renderer.render( scene, camera );
 
 			}
