@@ -39,9 +39,6 @@
 			let camera, scene, renderer;
 			let controller;
 
-			init();
-			animate();
-
 			function init() {
 
 				//Initialisation de Scene 3D et Lumiere
@@ -107,6 +104,8 @@
 
 			}
 
+			init();
+			animate();
 			function setupXR(){
         		renderer.xr.enabled = true;
         
