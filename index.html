@@ -34,10 +34,7 @@
 			import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 			import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 
-			document.addEventListener("DOMContentLoaded", function(){
-			const app = new App();
-			window.app = app;
-		});
+	
 
 			let camera, scene, renderer;
 			let controller;
@@ -109,7 +106,6 @@
 				window.addEventListener( 'resize', onWindowResize );
 
 			}
-
 
 			function setupXR(){
         		renderer.xr.enabled = true;
