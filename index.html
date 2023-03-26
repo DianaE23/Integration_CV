@@ -108,7 +108,7 @@
 				window.addEventListener( 'resize', onWindowResize );
 
 				//
-				const gltfloader = new GLTFLoader();
+				const loader = new GLTFLoader();
 				loader.load('/asset/asset_01.glb', function ( gltf )
 					{
 						scene.add( gltf.scene )
