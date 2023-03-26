@@ -75,6 +75,14 @@
 
 				//
 				const gltfloader = new GLTFLoader();
+				loader.load('/asset/asset_01.glb', function ( gltf )
+					{
+						kk = gltf.scene;  // sword 3D object is loaded
+						kk.scale.set(2, 2, 2);
+						kk.position.y = 4;
+						scene.add(kk);
+						console.log('OKKOKK');
+					} );
 				//
 
 				const geometry = new THREE.CylinderGeometry( 0.1, 0.1, 0.2, 32 ).translate( 0, 0.1, 0 );
@@ -85,15 +93,9 @@
 
 						const material = new THREE.MeshPhongMaterial( { color: 0xffffff * Math.random() } );
 						const mesh = new THREE.Mesh( geometry, material );
-						gltfloader.load('/asset/asset_01.glb', function ( gltf )
-						{
-							let mesh = gltf.scene;
-							console.log('Object 3D loadé');
-						});
 						reticle.matrix.decompose( mesh.position, mesh.quaternion, mesh.scale );
 						mesh.scale.y = Math.random() * 2 + 1;
 						scene.add( mesh );
-						console.log('Object 3D intégré');
 
 					}
 
