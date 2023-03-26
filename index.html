@@ -82,7 +82,7 @@
 				loader.load('/asset/asset_01.glb', function (gltf)
 				{	scene.add(gltf.scene);
 					gltf.scene.scale.set(0.001, 0.001, 0.001);
-					let asset = gltf.scene;	
+					const asset = gltf.scene;	
 					asset.visible = false;
 					console.log( 'LOAD SD3D' );
 				} );
@@ -93,9 +93,8 @@
 						const material = new THREE.MeshPhongMaterial( { color: 0xffffff * Math.random() } );
 						const mesh = new THREE.Mesh(geometry, materials);
 						asset.visible = true;
-						asset.position = reticle.position;
-						console.log(reticle.position);
-						//reticle.matrix.decompose( asset.position, asset.quaternion, asset.scale );
+
+						reticle.matrix.decompose( mesh.position, mesh.quaternion, mesh.scale );
 						//asset.scale.y = Math.random() * 2 + 1;
 						mesh.scale.y = Math.random() * 2 + 1;
 
