@@ -85,7 +85,9 @@
 						const mesh = new THREE.Mesh( geometry, material );
 						reticle.matrix.decompose( mesh.position, mesh.quaternion, mesh.scale );
 						mesh.scale.y = Math.random() * 2 + 1;
-						show3D();
+						
+						asset.position.setFromMatrixPosition(reticle.matrix );
+                		asset.visible = true;
 						//scene.add( mesh );
 
 					}
@@ -113,12 +115,14 @@
 		
 			}
 
-			function show3D() {
-				loader.load('/asset/asset_01.glb', function ( gltf )
+			function show3D(id) {
+				loader.load(`asset_0${id}.glb`, function ( gltf )
 					{
 						gltf.scene.scale.set(0.001, 0.001, 0.001);
 
 						scene.add( gltf.scene );
+						asset = gltf.scene;
+						asset.visible = false;
 					
 						console.log( 'LOAD SD3D' );
 					} );
