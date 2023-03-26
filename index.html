@@ -88,10 +88,12 @@
 						gltfloader.load('.asset/asset_01.glb', function ( gltf )
 						{
 							let mesh = gltf.scene;
+							console.log('Object 3D loadé')
 						});
 						reticle.matrix.decompose( mesh.position, mesh.quaternion, mesh.scale );
 						mesh.scale.y = Math.random() * 2 + 1;
 						scene.add( mesh );
+						console.log('Object 3D intégré')
 
 					}
 
