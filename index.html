@@ -85,10 +85,10 @@
 						const mesh = new THREE.Mesh( geometry, material );
 						reticle.matrix.decompose( asset.position, asset.quaternion, asset.scale );
 						mesh.scale.y = Math.random() * 2 + 1;
-						Console.log('111');
+						console.log('111');
 						asset.position.setFromMatrixPosition(reticle.matrix );
                 		asset.visible = true;
-						Console.log('2222');
+						console.log('2222');
 						//scene.add( mesh );
 
 					}
