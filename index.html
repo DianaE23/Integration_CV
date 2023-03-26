@@ -76,22 +76,26 @@
 				//
 
 				const geometry = new THREE.CylinderGeometry( 0.1, 0.1, 0.2, 32 ).translate( 0, 0.1, 0 );
+
 				const loader = new GLTFLoader();
+
+				loader.load('/asset/asset_01.glb', function (gltf)
+				{	scene.add(gltf.scene);
+					gltf.scene.scale.set(0.001, 0.001, 0.001);
+					asset = gltf.scene;	
+					asset.visible = false;				
+					console.log( 'LOAD SD3D' );
+				} );
 				function onSelect() {
 
 					if ( reticle.visible ) {
-						loader.load('/asset/asset_01.glb', function ( gltf )
-						{
-							gltf.scene.scale.set(0.001, 0.001, 0.001);
-							asset = gltf.scene;					
-							console.log( 'LOAD SD3D' );
-						} );
+			
 						//const material = new THREE.MeshPhongMaterial( { color: 0xffffff * Math.random() } );
 						//const mesh = new THREE.Mesh(geometry, materials);
-						
-						reticle.matrix.decompose( asset.position, asset.quaternion, asset.scale );
-						asset.scale.y = Math.random() * 2 + 1;
-						scene.add( asset);
+						asset.visible = true;
+						asset.position = reticle.position
+						//reticle.matrix.decompose( asset.position, asset.quaternion, asset.scale );
+						//asset.scale.y = Math.random() * 2 + 1;
 						//mesh.scale.y = Math.random() * 2 + 1;
 
 						//scene.add( mesh );
