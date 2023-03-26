@@ -83,9 +83,9 @@
 
 						const material = new THREE.MeshPhongMaterial( { color: 0xffffff * Math.random() } );
 						const mesh = new THREE.Mesh( geometry, material );
-						reticle.matrix.decompose( mesh.position, mesh.quaternion, mesh.scale );
+						reticle.matrix.decompose( asset.position, asset.quaternion, asset.scale );
 						mesh.scale.y = Math.random() * 2 + 1;
-						
+
 						asset.position.setFromMatrixPosition(reticle.matrix );
                 		asset.visible = true;
 						//scene.add( mesh );
@@ -114,9 +114,9 @@
 				const loader = new GLTFLoader();
 		
 			}
-
-			function show3D(id) {
-				loader.load(`asset_0${id}.glb`, function ( gltf )
+			//`asset_0${id}.glb`//
+			function show3D() {
+				loader.load('/asset/asset_01.glb', function ( gltf )
 					{
 						gltf.scene.scale.set(0.001, 0.001, 0.001);
 
