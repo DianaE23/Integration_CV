@@ -83,8 +83,8 @@
 
 					if ( reticle.visible ) {
 
-						//const material = new THREE.MeshPhongMaterial( { color: 0xffffff * Math.random() } );
-						//const mesh = new THREE.Mesh( geometry, material );
+						const material = new THREE.MeshPhongMaterial( { color: 0xffffff * Math.random() } );
+						const mesh = new THREE.Mesh( geometry, material );
 						gltfloader.load('/asset/asset_01.glb', function ( gltf )
 						{
 							let mesh = gltf.scene;
