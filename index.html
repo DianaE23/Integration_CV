@@ -74,6 +74,8 @@
 				document.body.appendChild( ARButton.createButton( renderer, { requiredFeatures: [ 'hit-test' ] } ) );
 
 				//
+				const gltfloader = new GLTFLoader();
+				//
 
 				const geometry = new THREE.CylinderGeometry( 0.1, 0.1, 0.2, 32 ).translate( 0, 0.1, 0 );
 
@@ -82,7 +84,10 @@
 					if ( reticle.visible ) {
 
 						const material = new THREE.MeshPhongMaterial( { color: 0xffffff * Math.random() } );
-						const mesh = new THREE.Mesh( geometry, material );
+						//const mesh = new THREE.Mesh( geometry, material );
+						const mesh = gltfloader.load('.asset/asset_01.glb');
+
+
 						reticle.matrix.decompose( mesh.position, mesh.quaternion, mesh.scale );
 						mesh.scale.y = Math.random() * 2 + 1;
 						scene.add( mesh );
