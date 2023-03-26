@@ -80,15 +80,21 @@
 				function onSelect() {
 
 					if ( reticle.visible ) {
-						show3D();
+						loader.load('/asset/asset_01.glb', function ( gltf )
+						{
+							gltf.scene.scale.set(0.001, 0.001, 0.001);
+							asset = gltf.scene;					
+							console.log( 'LOAD SD3D' );
+						} );
 						//const material = new THREE.MeshPhongMaterial( { color: 0xffffff * Math.random() } );
-						const mesh = new THREE.Mesh( asset );
-						asset.visible = true;
-										
-						reticle.matrix.decompose( mesh.position, mesh.quaternion, mesh.scale );
-						mesh.scale.y = Math.random() * 2 + 1;
+						//const mesh = new THREE.Mesh(geometry, materials);
+						
+						reticle.matrix.decompose( asset.position, asset.quaternion, asset.scale );
+						asset.scale.y = Math.random() * 2 + 1;
+						scene.add( asset);
+						//mesh.scale.y = Math.random() * 2 + 1;
 
-						scene.add( mesh );
+						//scene.add( mesh );
 
 					}
 
@@ -121,9 +127,7 @@
 						gltf.scene.scale.set(0.001, 0.001, 0.001);
 
 						scene.add( gltf.scene );
-						asset = gltf.scene;
-						asset.visible = false;
-					
+						asset = gltf.scene;					
 						console.log( 'LOAD SD3D' );
 					} );
 			}
