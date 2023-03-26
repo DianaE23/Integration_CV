@@ -17,13 +17,16 @@
 
 		<script async src="https://unpkg.com/three@0.140.0/examples/js/loaders/GLTFLoader.js"></script>
         <script async src="https://unpkg.com/three@0.140.0/examples/js/loaders/RGBELoader.js"></script>
+
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r79/three.min.js"></script>
 
 		<script type="importmap">
 			{
 				"imports": {
-					"three": "../build/three.module.js",
-					"three/addons/": "./jsm/"
+					"three": "https://unpkg.com/three@0.140.0/build/three.module.js",
+					"three/addons/": "https://unpkg.com/three@0.140.0/examples/jsm/"
+					"three0": "../build/three.module.js",
+					"three0/addons/": "./jsm/"
 				}
 			}
 		</script>
