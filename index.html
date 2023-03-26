@@ -82,13 +82,14 @@
 				loader.load('/asset/asset_01.glb', function ( gltf )
 				{	
 					
-					myobj = gltf.scene;
+					let myobj = gltf.scene;
 					myobj.scale.set(0.002, 0.002, 0.002);
 					console.log('objet load 3D');
 
 					scene.add(myobj);
 					myobj.visible = false;
 				} );
+
 				function onSelect() {
 
 					if ( reticle.visible ) {
