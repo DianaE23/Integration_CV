@@ -83,6 +83,7 @@
 					let myobj = gltf.scene;
 					myobj.scale.set(0.002, 0.002, 0.002);
 					console.log('objet load 3D');
+					scene.add(myobj);
 
 				} );
 
@@ -90,8 +91,7 @@
 
 					if ( reticle.visible ) {
 
-						scene.add(myobj);
-
+					
 						const mesh = new THREE.Mesh( myobj );
 						mesh.position.set( 0, 0, - 0.3 ).applyMatrix4( controller.matrixWorld );
 						mesh.quaternion.setFromRotationMatrix( controller.matrixWorld );
