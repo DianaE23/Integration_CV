@@ -80,7 +80,7 @@
 				loader.load('/asset/asset_01.glb', function ( gltf )
 				{	
 					
-					let myobj = gltf.scene;
+					myobj = gltf.scene;
 					myobj.scale.set(0.02, 0.02, 0.02);
 					console.log('objet load 3D');
 					scene.add(myobj);
