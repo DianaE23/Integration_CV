@@ -75,8 +75,6 @@
 
 				//
 
-				const geometry = new THREE.CylinderGeometry( 0.1, 0.1, 0.2, 32 ).translate( 0, 0.1, 0 );
-
 				const loader = new GLTFLoader();
 
 				loader.load('/asset/asset_01.glb', function ( gltf )
@@ -87,11 +85,14 @@
 					console.log('objet load 3D');
 
 					scene.add(myobj);
+					myobj.visible = false;
 				} );
 
 				function onSelect() {
 
 					if ( reticle.visible ) {
+
+						myobj.visible = true;
 			
 
 					}
@@ -117,17 +118,6 @@
 				//
 
 		
-			}
-			//`asset_0${id}.glb`//
-			function show3D() {
-				loader.load('/asset/asset_01.glb', function ( gltf )
-					{
-						gltf.scene.scale.set(0.001, 0.001, 0.001);
-
-						scene.add( gltf.scene );
-						asset = gltf.scene;					
-						console.log( 'LOAD SD3D' );
-					} );
 			}
 
 			
