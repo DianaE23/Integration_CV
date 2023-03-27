@@ -91,11 +91,12 @@
 
 					if ( reticle.visible ) {
 
-					
-						const mesh = new THREE.Mesh( myobj );
-						mesh.position.set( 0, 0, - 0.3 ).applyMatrix4( controller.matrixWorld );
-						mesh.quaternion.setFromRotationMatrix( controller.matrixWorld );
-						scene.add( mesh );
+						scene.add(myobj);
+
+						//const mesh = new THREE.Mesh( myobj );
+						//mesh.position.set( 0, 0, - 0.3 ).applyMatrix4( controller.matrixWorld );
+						//mesh.quaternion.setFromRotationMatrix( controller.matrixWorld );
+						//scene.add( mesh );
 			
 
 					}
